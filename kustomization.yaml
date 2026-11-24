@@ -1,0 +1,18 @@
+# Deploy: kubectl apply -k .
+# Sửa .env rồi apply lại -> ConfigMap đổi tên (hash) -> pod tự rollout với cấu hình mới.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: birthday
+resources:
+  - k8s/namespace.yaml
+  - k8s/deployment.yaml
+  - k8s/service.yaml
+  - k8s/ingress.yaml
+configMapGenerator:
+  - name: birthday-config
+    envs:
+      - .env
+images:
+  - name: her-birthday
+    newName: her-birthday      # đổi thành registry của bạn, ví dụ ghcr.io/<user>/her-birthday
+    newTag: "1.0.0"

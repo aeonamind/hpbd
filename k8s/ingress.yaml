@@ -1,0 +1,21 @@
+# k3s mặc định dùng Traefik. Đổi host thành domain của bạn.
+# Có cert-manager thì bỏ comment phần annotations + tls để có HTTPS (cần HTTPS cho tính năng thổi nến bằng mic).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: birthday
+  # annotations:
+  #   cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: birthday.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: birthday, port: { name: http } }
+  # tls:
+  #   - hosts: [birthday.example.com]
+  #     secretName: birthday-tls

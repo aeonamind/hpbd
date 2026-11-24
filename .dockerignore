@@ -1,0 +1,6 @@
+.env
+k8s
+kustomization.yaml
+HUONG-DAN.md
+Dockerfile
+.dockerignore
