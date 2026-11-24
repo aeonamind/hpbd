@@ -59,6 +59,14 @@ kubectl -n birthday logs deploy/birthday -f     # xem log theo dõi realtime
 
 ⚠️ Thổi nến bằng micro cần **HTTPS**. Có cert-manager thì bỏ comment phần `tls` trong `k8s/ingress.yaml`; nếu không, cô ấy vẫn chạm vào nến để thổi được.
 
+## 3b. Deploy bằng ArgoCD (repo aeonamind/gitops)
+- Chart nằm ở `infra/hpbd`, Application ở `apps/hpbd` (root app tự nhận). Namespace `application`, domain `hpbd.eugenebox.uk`.
+- **Nội dung trang sửa trong `infra/hpbd/values.yaml` → `config:`** (YAML thường: danh sách là list, thư là block `|`). Push lên `main` là ArgoCD sync, pod tự rollout nhờ `checksum/config`.
+- Push code vào repo này → GitHub Actions build `aeonamind/hpbd:<sha>`, đẩy DockerHub, rồi tự sửa `image.tag` trong gitops (giống sound-bot).
+  Cần secrets của repo: `DOCKER_USERNAME`, `DOCKER_PASSWORD`, `GITOPS_TOKEN`.
+- `TRACK_TOPIC` lấy từ Vault `secret/hpbd` (repo gitops công khai). Hướng dẫn tạo policy/role ở cuối `values.yaml`.
+- Khi dùng ArgoCD thì bỏ qua `kustomization.yaml`, `k8s/` và `.env` (chỉ dùng chạy tay / chạy local).
+
 ## 4. Theo dõi cô ấy đã xem tới đâu
 Trình duyệt gửi từng bước về `/api/track`, server ghi log và đẩy tiếp sang ntfy. Topic giờ **chỉ nằm trên server**, người xem không thấy được.
 1. Cài app **ntfy**, Subscribe topic trong `TRACK_TOPIC` (mặc định `sn17-4632cc54dc47481f4f`).

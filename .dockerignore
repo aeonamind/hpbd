@@ -4,3 +4,7 @@ kustomization.yaml
 HUONG-DAN.md
 Dockerfile
 .dockerignore
+.github
+.gitattributes
+.gitignore
+.env.example
