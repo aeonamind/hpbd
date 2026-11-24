@@ -11,18 +11,67 @@
 <script>
 /* CONFIG do server.js sinh ra từ biến môi trường (.env). Đừng sửa ở đây — sửa file .env. */
 const CONFIG = /*__CONFIG__*/null;
+// Theme: ?theme=xxx (preview) > CONFIG.theme (THEME in Vault/.env) > pastel
+(() => {
+  const ok = ['pastel', 'mint', 'navy', 'night'];
+  const q = (location.search.match(/[?&]theme=([a-z]+)/) || [])[1];
+  const t = [q, CONFIG && CONFIG.theme].find(x => ok.includes(x)) || 'pastel';
+  document.documentElement.dataset.theme = t;
+})();
 </script>
 <style>
-:root{
-  --bg1:#1d1247; --bg2:#07061a;
-  --pink:#ff8fb1; --peach:#ffb88c; --gold:#ffd36b; --lav:#c9a2ff;
+/* ===== Themes: switch with THEME (pastel | mint | navy | night) or ?theme= ===== */
+:root{ /* night: the original dark purple + pink */
+  --bg:radial-gradient(120% 90% at 50% 0%,#1d1247 0%,#120c33 45%,#07061a 100%);
+  --pink:#ff8fb1; --peach:#ffb88c; --gold:#ffd36b;
+  --t1:#ff8fb1; --t2:#ffd36b; --glow:255,143,177; --btnInk:#3a0d24;
   --ink:#fff8f0; --muted:rgba(255,248,240,.7);
-  --paper:#fffaf0; --paperInk:#4b2b36; --rose:#a0466a;
+  --glass:rgba(255,255,255,.08); --glassLine:rgba(255,255,255,.25); --shadow:rgba(0,0,0,.45);
+  --paper:#fffaf0; --paperInk:#4b2b36; --rose:#a0466a; --rule:160,70,106;
+  --env1:#e98aa8; --env2:#ffc9d8; --env3:#f6a9c0; --flap:#f3a2ba; --seal1:#ff6b8f; --seal2:#c2185b; --sealInk:#ffe;
+  --cake1:#e8789e; --cake2:#ffc2d4; --cake3:#ffd6e2; --cake4:#f597b6; --cakeTop:#ffe6ee; --cakeTop2:#ffd0de; --stripe:#ff9ec0; --nameShadow:#d65c86;
+  --star:255,226,150; --shapeLine:rgba(255,200,220,.85); --shapeFill:rgba(255,143,177,.18);
+  --last1:#ff7fa8; --last2:#b98aff; --cardInk:#3d1f35;
+}
+[data-theme=pastel]{ /* warm cream, coral & butter, balloons */
+  --bg:radial-gradient(55% 35% at 12% 8%,rgba(255,201,74,.28),transparent 70%),radial-gradient(50% 40% at 92% 88%,rgba(107,197,255,.22),transparent 70%),linear-gradient(170deg,#fffaf3 0%,#fff0e2 55%,#ffe6d6 100%);
+  --pink:#ff7a6b; --peach:#ffad4f; --gold:#e79a00;
+  --t1:#ff6b5b; --t2:#f39c12; --glow:255,122,107; --btnInk:#fff;
+  --ink:#3d2c2e; --muted:rgba(61,44,46,.66);
+  --glass:rgba(255,255,255,.7); --glassLine:rgba(61,44,46,.14); --shadow:rgba(140,80,50,.2);
+  --paper:#fff; --paperInk:#3d2c2e; --rose:#e2574c; --rule:226,87,76;
+  --env1:#7db9f5; --env2:#d2e8ff; --env3:#a8d0fb; --flap:#bcdcff; --seal1:#ff8a7a; --seal2:#e2574c; --sealInk:#fff;
+  --cake1:#f08a7e; --cake2:#ffd2c4; --cake3:#fff0ea; --cake4:#f6a394; --cakeTop:#fff7f3; --cakeTop2:#ffe1d6; --stripe:#6bc5ff; --nameShadow:#d9665a;
+  --star:255,190,50; --shapeLine:rgba(243,156,18,.9); --shapeFill:rgba(255,201,74,.22);
+  --last1:#ff7a6b; --last2:#ffb347; --cardInk:#3d2c2e;
+}
+[data-theme=mint]{ /* fresh mint & teal, peach accents */
+  --bg:radial-gradient(55% 35% at 85% 6%,rgba(255,179,138,.25),transparent 70%),radial-gradient(50% 40% at 8% 90%,rgba(79,183,232,.18),transparent 70%),linear-gradient(170deg,#f3fcf8 0%,#e2f6ee 55%,#d0efe4 100%);
+  --pink:#1fae95; --peach:#57c9a6; --gold:#e09a00;
+  --t1:#0f9a83; --t2:#3aa8de; --glow:31,174,149; --btnInk:#fff;
+  --ink:#1f3b36; --muted:rgba(31,59,54,.66);
+  --glass:rgba(255,255,255,.72); --glassLine:rgba(31,59,54,.14); --shadow:rgba(20,80,70,.18);
+  --paper:#fff; --paperInk:#1f3b36; --rose:#138a76; --rule:19,138,118;
+  --env1:#ffa77a; --env2:#ffe0cc; --env3:#ffc4a3; --flap:#ffd2b8; --seal1:#2cc2a6; --seal2:#0f7f6c; --sealInk:#fff;
+  --cake1:#3fb59d; --cake2:#bdf0e1; --cake3:#eafcf5; --cake4:#7ad3bd; --cakeTop:#f7fffc; --cakeTop2:#d3f5ea; --stripe:#ff9f7a; --nameShadow:#1d8a76;
+  --star:255,190,60; --shapeLine:rgba(15,154,131,.85); --shapeFill:rgba(79,201,166,.18);
+  --last1:#1fae95; --last2:#3aa8de; --cardInk:#1f3b36;
+}
+[data-theme=navy]{ /* midnight blue & gold, starry and elegant */
+  --bg:radial-gradient(120% 90% at 50% 0%,#1d3a63 0%,#0f203b 50%,#060d1c 100%);
+  --pink:#f2c14e; --peach:#ffdc8a; --gold:#f2c14e;
+  --t1:#f5cd6a; --t2:#9fd3ff; --glow:242,193,78; --btnInk:#1b2a44;
+  --ink:#f6f1e7; --muted:rgba(246,241,231,.7);
+  --paper:#fffdf7; --paperInk:#24324a; --rose:#2f5d9a; --rule:47,93,154;
+  --env1:#2f5d9a; --env2:#7aa7e0; --env3:#4e82c4; --flap:#6c9ee0; --seal1:#f5cd6a; --seal2:#c8901a; --sealInk:#1b2a44;
+  --cake1:#5b8fd1; --cake2:#cfe2ff; --cake3:#eef5ff; --cake4:#8fb5e8; --cakeTop:#f7faff; --cakeTop2:#dce9ff; --stripe:#f2c14e; --nameShadow:#2f5d9a;
+  --star:242,193,78; --shapeLine:rgba(245,205,106,.95); --shapeFill:rgba(242,193,78,.16);
+  --last1:#f2c14e; --last2:#5b8fd1; --cardInk:#24324a;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
 body{
-  background:radial-gradient(120% 90% at 50% 0%,var(--bg1) 0%,#120c33 45%,var(--bg2) 100%);
+  background:var(--bg);background-attachment:fixed;
   color:var(--ink);font-family:'Be Vietnam Pro',system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none;
 }
@@ -30,7 +79,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
 #sky{z-index:0}
 #fx{z-index:50;pointer-events:none}
 #floaters{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
-.floater{position:absolute;bottom:-40px;color:var(--pink);opacity:0;animation:rise linear forwards;text-shadow:0 0 12px rgba(255,143,177,.6)}
+.floater{position:absolute;bottom:-40px;color:var(--pink);opacity:0;animation:rise linear forwards;text-shadow:0 0 12px rgba(var(--glow),.5)}
 @keyframes rise{0%{transform:translate(0,0) rotate(0);opacity:0}10%{opacity:.55}90%{opacity:.35}100%{transform:translate(var(--dx),-110vh) rotate(var(--rot));opacity:0}}
 
 .scene{
@@ -42,40 +91,40 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
 
 .script{font-family:'Dancing Script',cursive;font-weight:700}
 h1.script{font-size:clamp(38px,11vw,58px);margin:.1em 0;line-height:1.15;
-  background:linear-gradient(90deg,var(--pink),var(--gold),var(--pink));background-size:200% 100%;
+  background:linear-gradient(90deg,var(--t1),var(--t2),var(--t1));background-size:200% 100%;
   -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite;
-  filter:drop-shadow(0 0 18px rgba(255,143,177,.35))}
+  filter:drop-shadow(0 0 18px rgba(var(--glow),.3))}
 @keyframes shine{to{background-position:200% 0}}
 .sub{color:var(--muted);font-size:15px;line-height:1.6;margin:.4em 0;font-weight:300}
 
 .btn{
-  appearance:none;border:0;cursor:pointer;font:600 16px 'Be Vietnam Pro',sans-serif;color:#3a0d24;
+  appearance:none;border:0;cursor:pointer;font:600 16px 'Be Vietnam Pro',sans-serif;color:var(--btnInk);
   background:linear-gradient(135deg,var(--pink),var(--peach));padding:14px 28px;border-radius:999px;
-  box-shadow:0 8px 30px rgba(255,143,177,.45),inset 0 1px 0 rgba(255,255,255,.5);
+  box-shadow:0 8px 30px rgba(var(--glow),.42),inset 0 1px 0 rgba(255,255,255,.5);
   transition:transform .2s,opacity .6s;margin:6px;
 }
 .btn:active{transform:scale(.95)}
 .btn.pulse{animation:pulse 2.2s ease-in-out infinite}
-@keyframes pulse{0%,100%{box-shadow:0 8px 30px rgba(255,143,177,.45)}50%{box-shadow:0 8px 46px rgba(255,143,177,.85)}}
-.btn.ghost{background:rgba(255,255,255,.08);color:var(--ink);border:1px solid rgba(255,255,255,.25);box-shadow:none;backdrop-filter:blur(6px)}
+@keyframes pulse{0%,100%{box-shadow:0 8px 30px rgba(var(--glow),.42)}50%{box-shadow:0 8px 46px rgba(var(--glow),.8)}}
+.btn.ghost{background:var(--glass);color:var(--ink);border:1px solid var(--glassLine);box-shadow:none;backdrop-filter:blur(6px)}
 .reveal{opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .8s,transform .8s}
 .reveal.show{opacity:1;transform:none;pointer-events:auto}
 .hidden{display:none!important}
 
 #musicBtn{position:fixed;z-index:60;top:calc(env(safe-area-inset-top) + 14px);right:14px;width:42px;height:42px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:var(--ink);font-size:18px;backdrop-filter:blur(6px);
+  border:1px solid var(--glassLine);background:var(--glass);color:var(--ink);font-size:18px;backdrop-filter:blur(6px);
   opacity:0;pointer-events:none;transition:opacity .6s}
 #musicBtn.show{opacity:1;pointer-events:auto}
 #musicBtn.off{opacity:.45}
 
 /* ---------- start ---------- */
-.big-icon{font-size:64px;animation:bob 3s ease-in-out infinite;filter:drop-shadow(0 0 24px rgba(255,143,177,.6))}
+.big-icon{font-size:64px;animation:bob 3s ease-in-out infinite;filter:drop-shadow(0 0 24px rgba(var(--glow),.55))}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(4deg)}}
 .tiny{font-size:12px;color:var(--muted);opacity:.8;margin-top:18px}
 
 /* ---------- lock ---------- */
 .count{display:flex;gap:10px;margin:22px 0}
-.count div{min-width:64px;padding:12px 6px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14)}
+.count div{min-width:64px;padding:12px 6px;border-radius:14px;background:var(--glass);border:1px solid var(--glassLine)}
 .count b{display:block;font-size:28px;font-weight:600}
 .count span{font-size:11px;color:var(--muted)}
 
@@ -91,16 +140,16 @@ h1.script{font-size:clamp(38px,11vw,58px);margin:.1em 0;line-height:1.15;
 .cake::before{content:'';position:absolute;left:-30%;right:-30%;top:-40%;bottom:-10%;border-radius:50%;
   background:radial-gradient(closest-side,rgba(255,200,110,.35),transparent);transition:opacity 1.2s;pointer-events:none}
 .cake.dark::before{opacity:0}
-.plate{position:absolute;bottom:0;left:-12%;width:124%;height:30px;border-radius:50%;background:linear-gradient(#f4f0ff,#c9c0e6);box-shadow:0 14px 30px rgba(0,0,0,.45)}
+.plate{position:absolute;bottom:0;left:-12%;width:124%;height:30px;border-radius:50%;background:linear-gradient(#fbfaff,#d9d3ec);box-shadow:0 14px 30px var(--shadow)}
 .base{position:absolute;bottom:16px;left:0;right:0;height:120px;border-radius:0 0 50% 50%/0 0 24px 24px;
-  background:linear-gradient(90deg,#e8789e,#ffc2d4 38%,#ffd6e2 50%,#f597b6 80%,#e0739a)}
-.base::before{content:'';position:absolute;top:-24px;left:0;right:0;height:48px;border-radius:50%;background:radial-gradient(ellipse at 50% 40%,#fff,#ffe6ee 70%,#ffd0de)}
+  background:linear-gradient(90deg,var(--cake1),var(--cake2) 38%,var(--cake3) 50%,var(--cake4) 80%,var(--cake1))}
+.base::before{content:'';position:absolute;top:-24px;left:0;right:0;height:48px;border-radius:50%;background:radial-gradient(ellipse at 50% 40%,#fff,var(--cakeTop) 70%,var(--cakeTop2))}
 .base::after{content:'';position:absolute;top:0;left:0;right:0;height:30px;
-  background:radial-gradient(circle at 12px 2px,#fff3f7 9px,transparent 10px) 0 0/26px 30px repeat-x;opacity:.95}
-.cake-name{position:absolute;left:0;right:0;bottom:30px;font-family:'Dancing Script',cursive;font-weight:700;font-size:28px;color:#fff;text-shadow:0 2px 0 #d65c86,0 0 10px rgba(255,255,255,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 10px}
+  background:radial-gradient(circle at 12px 2px,var(--cakeTop) 9px,transparent 10px) 0 0/26px 30px repeat-x;opacity:.95}
+.cake-name{position:absolute;left:0;right:0;bottom:30px;font-family:'Dancing Script',cursive;font-weight:700;font-size:28px;color:#fff;text-shadow:0 2px 0 var(--nameShadow),0 0 10px rgba(255,255,255,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 10px}
 .c{position:absolute;width:26px;height:66px;margin-left:-13px;cursor:pointer}
 .stick{position:absolute;bottom:0;left:50%;width:8px;height:40px;margin-left:-4px;border-radius:3px 3px 2px 2px;
-  background:repeating-linear-gradient(-45deg,#fff 0 5px,#ff9ec0 5px 10px);box-shadow:inset -2px 0 0 rgba(0,0,0,.08)}
+  background:repeating-linear-gradient(-45deg,#fff 0 5px,var(--stripe) 5px 10px);box-shadow:inset -2px 0 0 rgba(0,0,0,.08)}
 .stick::before{content:'';position:absolute;top:-5px;left:50%;width:1.5px;height:6px;margin-left:-.75px;background:#3b2a2a}
 .flame{position:absolute;bottom:43px;left:50%;width:14px;height:22px;margin-left:-7px;transform-origin:50% 95%;
   transform:rotate(var(--lean,0deg)) scaleY(calc(1 - var(--squash,0)));transition:transform .12s,opacity .3s}
@@ -115,21 +164,21 @@ h1.script{font-size:clamp(38px,11vw,58px);margin:.1em 0;line-height:1.15;
 .c.out .smoke{animation:smoke 1.8s ease-out forwards}
 @keyframes smoke{0%{opacity:.8;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(6px,-60px) scale(3.5)}}
 .controls{min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.meter{width:180px;height:6px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:10px}
+.meter{width:180px;height:6px;border-radius:6px;background:var(--glassLine);overflow:hidden;margin-top:10px}
 .meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--pink));transition:width .08s}
 #cakeStatus{font-size:13px;color:var(--muted);min-height:20px;margin-top:6px}
 
 /* ---------- letter ---------- */
 .envelope{position:relative;width:min(300px,80vw);aspect-ratio:3/2;margin:30px auto;cursor:pointer;perspective:900px;transition:opacity .8s,transform .8s}
 .envelope.gone{opacity:0;transform:translateY(40px) scale(.9);pointer-events:none}
-.env-back{position:absolute;inset:0;background:#e98aa8;border-radius:10px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.env-back{position:absolute;inset:0;background:var(--env1);border-radius:10px;box-shadow:0 24px 60px var(--shadow)}
 .env-letter{position:absolute;left:7%;right:7%;top:7%;bottom:10%;background:var(--paper);border-radius:4px;z-index:2;display:flex;align-items:flex-start;justify-content:center;padding-top:10%;
   font-family:'Dancing Script',cursive;font-weight:700;font-size:24px;color:var(--rose);transition:transform 1s cubic-bezier(.2,.8,.2,1) .55s}
-.env-front{position:absolute;inset:0;z-index:3;border-radius:10px;background:linear-gradient(160deg,#ffc9d8,#f6a9c0);clip-path:polygon(0 0,50% 52%,100% 0,100% 100%,0 100%)}
-.env-flap{position:absolute;left:0;right:0;top:0;height:58%;z-index:4;background:linear-gradient(#f3a2ba,#e98aa8);clip-path:polygon(0 0,100% 0,50% 100%);
+.env-front{position:absolute;inset:0;z-index:3;border-radius:10px;background:linear-gradient(160deg,var(--env2),var(--env3));clip-path:polygon(0 0,50% 52%,100% 0,100% 100%,0 100%)}
+.env-flap{position:absolute;left:0;right:0;top:0;height:58%;z-index:4;background:linear-gradient(var(--flap),var(--env1));clip-path:polygon(0 0,100% 0,50% 100%);
   transform-origin:top;transition:transform .7s ease,z-index 0s linear .35s}
-.seal{position:absolute;z-index:5;left:50%;top:58%;width:44px;height:44px;margin:-26px 0 0 -22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ff6b8f,#c2185b);
-  display:flex;align-items:center;justify-content:center;font-size:20px;color:#ffe;box-shadow:0 4px 10px rgba(0,0,0,.3);transition:opacity .3s;animation:beat 1.4s ease-in-out infinite}
+.seal{position:absolute;z-index:5;left:50%;top:58%;width:44px;height:44px;margin:-26px 0 0 -22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--seal1),var(--seal2));
+  display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--sealInk);box-shadow:0 4px 10px rgba(0,0,0,.25);transition:opacity .3s;animation:beat 1.4s ease-in-out infinite}
 @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}45%{transform:scale(1.08)}}
 .envelope.open .env-flap{transform:rotateX(180deg);z-index:1}
 .envelope.open .seal{opacity:0}
@@ -137,9 +186,9 @@ h1.script{font-size:clamp(38px,11vw,58px);margin:.1em 0;line-height:1.15;
 .paper-wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 16px);pointer-events:none}
 .paper{width:min(520px,100%);max-height:calc(100dvh - 150px);overflow-y:auto;-webkit-overflow-scrolling:touch;text-align:left;
-  background-color:var(--paper);background-image:repeating-linear-gradient(transparent 0 31px,rgba(160,70,106,.13) 31px 32px);background-attachment:local;
+  background-color:var(--paper);background-image:repeating-linear-gradient(transparent 0 31px,rgba(var(--rule),.13) 31px 32px);background-attachment:local;
   color:var(--paperInk);border-radius:12px;padding:26px 22px 30px;font-family:'Patrick Hand',cursive;font-size:20px;line-height:32px;
-  box-shadow:0 30px 80px rgba(0,0,0,.55);opacity:0;transform:translateY(30px) scale(.94);transition:opacity .9s,transform .9s;user-select:text;-webkit-user-select:text}
+  box-shadow:0 30px 80px var(--shadow);opacity:0;transform:translateY(30px) scale(.94);transition:opacity .9s,transform .9s;user-select:text;-webkit-user-select:text}
 .paper-wrap.show{pointer-events:auto}
 .paper-wrap.show .paper{opacity:1;transform:none}
 #letterText{white-space:pre-wrap}
@@ -152,21 +201,21 @@ h1.script{font-size:clamp(38px,11vw,58px);margin:.1em 0;line-height:1.15;
 /* ---------- wishes ---------- */
 .deck{position:relative;width:min(320px,84vw);height:min(400px,54dvh);margin:16px auto 10px;touch-action:none}
 .card{position:absolute;inset:0;border-radius:24px;padding:30px 24px;display:flex;flex-direction:column;justify-content:center;align-items:center;
-  background:linear-gradient(160deg,hsl(var(--h),92%,88%),hsl(calc(var(--h) + 35),85%,78%));color:#3d1f35;
-  box-shadow:0 18px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.7);
+  background:linear-gradient(160deg,hsl(var(--h),92%,88%),hsl(calc(var(--h) + 35),85%,78%));color:var(--cardInk);
+  box-shadow:0 18px 40px var(--shadow),inset 0 1px 0 rgba(255,255,255,.7);
   transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .5s;will-change:transform;cursor:grab}
 .card.drag{transition:none}
-.card .num{font-family:'Dancing Script',cursive;font-weight:700;font-size:70px;line-height:1;color:#fff;text-shadow:0 3px 14px rgba(160,70,106,.45);margin-bottom:14px}
+.card .num{font-family:'Dancing Script',cursive;font-weight:700;font-size:70px;line-height:1;color:#fff;text-shadow:0 3px 14px rgba(var(--rule),.4);margin-bottom:14px}
 .card p{font-size:clamp(18px,5vw,21px);line-height:1.55;font-weight:500;margin:0}
 .card .hint{position:absolute;bottom:16px;font-size:12px;opacity:.55}
-.card.last{background:linear-gradient(160deg,#ff7fa8,#b98aff);color:#fff}
+.card.last{background:linear-gradient(160deg,var(--last1),var(--last2));color:#fff}
 .card.last .num{text-shadow:0 0 20px rgba(255,255,255,.7)}
 #wishCount{font-size:13px;color:var(--muted);letter-spacing:.1em}
 
 /* ---------- photos ---------- */
 #s-photos{justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px 14px;width:min(480px,100%);margin:16px auto 20px;padding:4px}
-.polaroid{background:#fff;padding:8px 8px 34px;border-radius:3px;box-shadow:0 12px 26px rgba(0,0,0,.45);transform:rotate(var(--r)) translateY(20px);opacity:0;
+.polaroid{background:#fff;padding:8px 8px 34px;border-radius:3px;box-shadow:0 12px 26px var(--shadow);transform:rotate(var(--r)) translateY(20px);opacity:0;
   transition:transform .8s cubic-bezier(.2,.8,.2,1),opacity .8s;position:relative;cursor:zoom-in}
 .polaroid.show{opacity:1;transform:rotate(var(--r))}
 .polaroid img{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#eee}
@@ -182,16 +231,16 @@ h1.script{font-size:clamp(38px,11vw,58px);margin:.1em 0;line-height:1.15;
 #finalHint{position:relative;z-index:3;transition:opacity .8s}
 #finalHint.fade{opacity:0}
 #heartSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-#heartSvg path{fill:rgba(255,143,177,0);stroke:rgba(255,200,220,.85);stroke-width:1.5;filter:drop-shadow(0 0 6px rgba(255,143,177,.9));transition:fill 2.5s ease}
-#heartSvg path.filled{fill:rgba(255,143,177,.18)}
+#heartSvg path{fill:transparent;stroke:var(--shapeLine);stroke-width:2;stroke-linejoin:round;filter:drop-shadow(0 0 6px rgba(var(--glow),.8));transition:fill 2.5s ease}
+#heartSvg path.filled{fill:var(--shapeFill)}
 .ustar{position:absolute;left:0;top:0;width:18px;height:18px;margin:-9px 0 0 -9px;pointer-events:none;
   transition:transform 1.8s cubic-bezier(.6,0,.2,1)}
-.ustar::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#fff 0 22%,rgba(255,226,150,.9) 35%,rgba(255,143,177,.35) 60%,transparent 72%);animation:twk 1.6s ease-in-out infinite alternate}
+.ustar::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#fff 0 22%,rgba(var(--star),.95) 35%,rgba(var(--glow),.4) 60%,transparent 72%);animation:twk 1.6s ease-in-out infinite alternate}
 .ustar.pop::before{animation:popIn .5s ease-out,twk 1.6s ease-in-out .5s infinite alternate}
 @keyframes popIn{from{transform:scale(3);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes twk{from{opacity:.75;transform:scale(.85)}to{opacity:1;transform:scale(1.15)}}
-#heartAge{position:absolute;left:0;right:0;text-align:center;font-family:'Dancing Script',cursive;font-weight:700;font-size:64px;color:#fff;
-  text-shadow:0 0 24px rgba(255,143,177,.9),0 0 50px rgba(255,143,177,.6);opacity:0;transform:scale(.6);transition:opacity 1.4s,transform 1.4s;pointer-events:none}
+#heartAge{position:absolute;left:0;right:0;text-align:center;font-family:'Dancing Script',cursive;font-weight:700;font-size:64px;color:var(--t1);
+  text-shadow:0 0 18px rgba(var(--glow),.55),0 0 40px rgba(var(--glow),.35);opacity:0;transform:scale(.6);transition:opacity 1.4s,transform 1.4s;pointer-events:none}
 #heartAge.show{opacity:1;transform:none}
 #finalMsg{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom) + 18px);z-index:3}
 #finalMsg h1{font-size:clamp(32px,9.5vw,50px)}
@@ -219,7 +268,7 @@ h1.script{font-size:clamp(38px,11vw,58px);margin:.1em 0;line-height:1.15;
 
 <!-- START -->
 <section class="scene" id="s-start">
-  <div class="big-icon">💌</div>
+  <div class="big-icon" id="startIcon">🎉</div>
   <p class="sub" style="margin-top:22px">Có một điều bất ngờ dành cho</p>
   <h1 class="script js-name"></h1>
   <button class="btn pulse" id="startBtn" style="margin-top:26px">Mở quà nhé 🎁</button>
@@ -297,7 +346,7 @@ h1.script{font-size:clamp(38px,11vw,58px);margin:.1em 0;line-height:1.15;
   <div id="heartAge"></div>
   <div id="finalHint">
     <p class="sub" style="font-size:17px;margin-top:30px">Chạm vào bầu trời<br>để thắp lên <b id="starGoal">17</b> ngôi sao ✨</p>
-    <p class="sub" id="starCount" style="font-size:22px;font-weight:500;color:var(--gold)">0 / 17</p>
+    <p class="sub" id="starCount" style="font-size:22px;font-weight:600;color:var(--gold)">0 / 17</p>
   </div>
   <div id="finalMsg" class="reveal">
     <h1 class="script" id="finalTitle"></h1>
@@ -316,6 +365,15 @@ const fill = s => String(s).split('{name}').join(CONFIG.herName).split('{from}')
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const rand = (a, b) => a + Math.random() * (b - a);
 const N = CONFIG.age || 17;
+const THEME = document.documentElement.dataset.theme;
+const T = {
+  pastel: { light: true,  shape: 'star',  floaters: ['🎈', '🎈', '✦', '🎉'], seal: '★', icon: '🎉', confetti: ['#ff7a6b', '#ffc94a', '#6bc5ff', '#5cc9a7', '#ff9ecf', '#b89cff'] },
+  mint:   { light: true,  shape: 'star',  floaters: ['🎈', '✦', '🌿', '🎈'], seal: '★', icon: '🎉', confetti: ['#1fae95', '#ffb38a', '#3aa8de', '#ffd166', '#ff8fa3', '#7ad3bd'] },
+  navy:   { light: false, shape: 'star',  floaters: ['✦', '✧', '·', '✦'],   seal: '★', icon: '🎉', confetti: ['#f2c14e', '#9fd3ff', '#ffffff', '#ffdc8a', '#5b8fd1', '#f6a6b2'] },
+  night:  { light: false, shape: 'heart', floaters: ['♥', '♥', '✦'],        seal: '♥', icon: '💌', confetti: ['#ff8fb1', '#ffd36b', '#9be7ff', '#c9a2ff', '#ffffff', '#ffb88c', '#8affc1'] },
+}[THEME];
+document.querySelector('.seal').textContent = T.seal;
+document.getElementById('startIcon').textContent = T.icon;
 
 /* ---------------- Tracking (ntfy.sh push to your phone) ---------------- */
 const Track = (() => {
@@ -453,7 +511,20 @@ const Sky = (() => {
     W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; c.setTransform(dpr, 0, 0, dpr, 0, 0);
     stars = Array.from({ length: Math.round(W * H / 2400) }, () => ({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.2 + .25, p: Math.random() * 6.28, s: .4 + Math.random() * 1.6 }));
   }
+  let bokeh = [];
+  function frameLight(t) {
+    c.clearRect(0, 0, W, H);
+    if (bokeh.length !== 16) bokeh = Array.from({ length: 16 }, (_, i) => ({ x: Math.random() * W, y: Math.random() * H, r: rand(14, 46), col: T.confetti[i % T.confetti.length], p: Math.random() * 6.28, s: rand(.08, .25) }));
+    for (const b of bokeh) {
+      b.y -= b.s; if (b.y < -60) { b.y = H + 60; b.x = Math.random() * W; }
+      c.globalAlpha = .1 + .06 * Math.sin(t * .0008 + b.p);
+      c.fillStyle = b.col; c.beginPath(); c.arc(b.x + Math.sin(t * .0005 + b.p) * 14, b.y, b.r, 0, 6.283); c.fill();
+    }
+    c.globalAlpha = 1;
+    requestAnimationFrame(frameLight);
+  }
   function frame(t) {
+    if (T.light) return frameLight(t);
     c.clearRect(0, 0, W, H);
     c.fillStyle = '#fff';
     for (const s of stars) {
@@ -479,7 +550,7 @@ const Sky = (() => {
 const FX = (() => {
   const cv = $('#fx'), c = cv.getContext('2d');
   let W, H, parts = [], running = false;
-  const colors = ['#ff8fb1', '#ffd36b', '#9be7ff', '#c9a2ff', '#ffffff', '#ffb88c', '#8affc1'];
+  const colors = T.confetti;
   const pick = () => colors[Math.random() * colors.length | 0];
   function resize() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -489,7 +560,7 @@ const FX = (() => {
     const base = col || pick();
     for (let i = 0; i < n; i++) {
       const a = Math.random() * 6.283, sp = rand(1.5, 5.5);
-      parts.push({ type: 'spark', x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 0, max: rand(50, 90), size: rand(1.4, 2.6), color: Math.random() < .75 ? base : '#fff' });
+      parts.push({ type: 'spark', x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 0, max: rand(50, 90), size: rand(1.4, 2.6), color: Math.random() < .75 ? base : (T.light ? pick() : '#fff') });
     }
     kick();
   }
@@ -507,13 +578,13 @@ const FX = (() => {
         c.restore();
       } else if (p.type === 'rocket') {
         p.vy += .12; p.x += p.vx; p.y += p.vy;
-        c.globalAlpha = 1; c.fillStyle = '#ffe9b0';
+        c.globalAlpha = 1; c.fillStyle = T.light ? colors[0] : '#ffe9b0';
         for (let k = 0; k < 4; k++) { c.globalAlpha = 1 - k * .25; c.beginPath(); c.arc(p.x - p.vx * k * 1.5, p.y - p.vy * k * 1.5, 2 - k * .4, 0, 6.283); c.fill(); }
         if (p.vy >= -.5) { parts.splice(i, 1); burst(p.x, p.y, 80); continue; }
       } else {
         p.vx *= .975; p.vy = p.vy * .975 + .045; p.x += p.vx; p.y += p.vy;
         const a = 1 - p.life / p.max;
-        c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.max(0, a); c.fillStyle = p.color;
+        c.globalCompositeOperation = T.light ? 'source-over' : 'lighter'; c.globalAlpha = Math.max(0, a); c.fillStyle = p.color;
         c.beginPath(); c.arc(p.x, p.y, p.size * (.4 + a * .6), 0, 6.283); c.fill();
         c.globalCompositeOperation = 'source-over';
       }
@@ -542,11 +613,11 @@ const FX = (() => {
   };
 })();
 
-/* ---------------- Floating hearts ---------------- */
+/* ---------------- Floating decorations (per theme) ---------------- */
 setInterval(() => {
   if (document.hidden) return;
   const s = document.createElement('span');
-  s.className = 'floater'; s.textContent = Math.random() < .7 ? '♥' : '✦';
+  s.className = 'floater'; s.textContent = T.floaters[Math.random() * T.floaters.length | 0];
   s.style.left = rand(0, 100) + 'vw'; s.style.fontSize = rand(10, 22) + 'px';
   s.style.setProperty('--dx', rand(-60, 60) + 'px'); s.style.setProperty('--rot', rand(-90, 90) + 'deg');
   const dur = rand(9, 15); s.style.animationDuration = dur + 's';
@@ -827,7 +898,7 @@ enter['s-photos'] = () => {
 $('#lightbox').onclick = () => $('#lightbox').classList.remove('show');
 $('#photosNext').onclick = () => go('s-final');
 
-/* ---------------- Final: 17 stars -> heart ---------------- */
+/* ---------------- Final: N stars -> big star (or heart in the night theme) ---------------- */
 let taps = 0, stars = [];
 $('#starCount').textContent = `0 / ${N}`;
 $('#s-final').addEventListener('pointerdown', e => {
@@ -837,7 +908,7 @@ $('#s-final').addEventListener('pointerdown', e => {
   s.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
   $('#ustars').appendChild(s); stars.push(s);
   Sound.starNote(taps);
-  FX.burst(e.clientX, e.clientY, 18, '#ffe9b0');
+  FX.burst(e.clientX, e.clientY, 18, T.light ? T.confetti[taps % T.confetti.length] : '#ffe9b0');
   taps++;
   $('#starCount').textContent = `${taps} / ${N}`;
   if (taps === N) formHeart();
@@ -847,16 +918,36 @@ async function formHeart() {
   $('#finalHint').classList.add('fade');
   const W = innerWidth, H = innerHeight;
   const sc = Math.min(W * .026, H * .021), cx = W / 2, cy = H * .31;
-  const pts = stars.map((_, i) => {
-    const t = (i / N) * Math.PI * 2;
-    return [cx + sc * 16 * Math.pow(Math.sin(t), 3), cy - sc * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))];
-  });
+  let pts, corners = null, ageTop = cy + sc * 3 - 42;
+  if (T.shape === 'heart') {
+    pts = stars.map((_, i) => {
+      const t = (i / N) * Math.PI * 2;
+      return [cx + sc * 16 * Math.pow(Math.sin(t), 3), cy - sc * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))];
+    });
+  } else {
+    // five-pointed star: spread the lit stars evenly along its outline
+    const R = sc * 17, r = R * .45, sy = cy + R * .12;
+    corners = Array.from({ length: 10 }, (_, k) => {
+      const a = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? r : R;
+      return [cx + rr * Math.cos(a), sy + rr * Math.sin(a)];
+    });
+    const seg = corners.map((p, k) => { const q = corners[(k + 1) % 10]; return Math.hypot(q[0] - p[0], q[1] - p[1]); });
+    const total = seg.reduce((a, b) => a + b, 0);
+    pts = stars.map((_, i) => {
+      let d = total * i / N, k = 0;
+      while (d > seg[k]) { d -= seg[k]; k++; }
+      const p = corners[k], q = corners[(k + 1) % 10], f = d / seg[k];
+      return [p[0] + (q[0] - p[0]) * f, p[1] + (q[1] - p[1]) * f];
+    });
+    ageTop = sy - 40;
+  }
   stars.forEach((s, i) => { s.classList.remove('pop'); setTimeout(() => s.style.transform = `translate(${pts[i][0]}px, ${pts[i][1]}px)`, i * 40); });
   await sleep(2400);
   // smooth closed curve through the star points
   const P = i => pts[(i + pts.length) % pts.length];
   let d = `M${P(0)[0]},${P(0)[1]}`;
-  for (let i = 0; i < pts.length; i++) {
+  if (corners) d = 'M' + corners.map(p => p.join(',')).join(' L') + ' Z';
+  else for (let i = 0; i < pts.length; i++) {
     const p0 = P(i - 1), p1 = P(i), p2 = P(i + 1), p3 = P(i + 2);
     d += ` C${p1[0] + (p2[0] - p0[0]) / 6},${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6},${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]},${p2[1]}`;
   }
@@ -868,14 +959,14 @@ async function formHeart() {
   path.style.strokeDashoffset = 0;
   await sleep(2300);
   path.classList.add('filled');
-  const age = $('#heartAge'); age.textContent = N; age.style.top = (cy + sc * 3 - 42) + 'px'; age.classList.add('show');
+  const age = $('#heartAge'); age.textContent = N; age.style.top = ageTop + 'px'; age.classList.add('show');
   Sound.playBirthday();
   FX.show(6000, 380); FX.confetti(140);
   await sleep(1200);
   $('#finalTitle').textContent = fill(CONFIG.finalTitle);
   $('#finalText').textContent = fill(CONFIG.finalMessage);
   $('#finalMsg').classList.add('show');
-  Track.mark('final', `💖 Thắp đủ ${N} sao → trái tim + lời nhắn cuối. 🏁 ĐÃ XEM HẾT!`);
+  Track.mark('final', `🌟 Thắp đủ ${N} sao → ${T.shape === 'heart' ? 'trái tim' : 'ngôi sao lớn'} + lời nhắn cuối. 🏁 ĐÃ XEM HẾT!`);
 }
 $('#replayBtn').onclick = () => { Track.send('↺ Bấm "Xem lại từ đầu" 🥹'); setTimeout(() => location.reload(), 300); };
 

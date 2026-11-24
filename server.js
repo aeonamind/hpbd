@@ -44,7 +44,8 @@ const unquote = v => {
 };
 
 function buildState(env) {
-  const str = (key, def = '') => (unquote(env[key]) || def).replace(/\n/g, '\n');
+  // A literal backslash-n (as written in .env) becomes a real newline.
+  const str = (key, def = '') => (unquote(env[key]) || def).replace(/\\n/g, '\n');
   // Lists: one item per line (handy in the Vault UI) or separated by | (handy in .env).
   const list = key => str(key).split(/\r?\n|\|/).map(s => s.trim()).filter(Boolean);
 
@@ -71,12 +72,13 @@ function buildState(env) {
     }),
     finalTitle: str('FINAL_TITLE', 'Chúc mừng sinh nhật, {name}!'),
     finalMessage: str('FINAL_MESSAGE'),
+    theme: str('THEME', 'pastel'), // pastel | mint | navy | night
     track: true, // client always reports to /api/track; server decides whether to push
   };
   const fill = s => s.split('{name}').join(config.herName).split('{from}').join(config.fromName).split('{age}').join(config.age);
   const page = TEMPLATE
     .replace('/*__TITLE__*/', () => escHtml(fill(str('PAGE_TITLE', 'Sinh nhật vui vẻ, {name} 🎂'))))
-    .replace('/*__CONFIG__*/null', () => JSON.stringify(config).replace(/</g, '\u003c'));
+    .replace('/*__CONFIG__*/null', () => JSON.stringify(config).replace(/</g, '\\u003c')); // keep '</script>' in content from closing the tag
   return {
     config,
     page,

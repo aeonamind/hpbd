@@ -17,6 +17,7 @@ Clone về thì tạo file trước: `cp .env.example .env` (`.env` không đư�
 |---|---|
 | `HER_NAME`, `FROM_NAME`, `AGE` | Tên cô ấy, tên bạn ký cuối thư, tuổi (= số nến và số ngôi sao) |
 | `PAGE_TITLE` | Tiêu đề tab trình duyệt |
+| `THEME` | Giao diện: `pastel` (kem, san hô, bóng bay — mặc định), `mint` (bạc hà), `navy` (xanh đêm & vàng), `night` (tím hồng, kết thúc bằng trái tim). Xem thử: `?preview&theme=mint` |
 | `UNLOCK_AT` | Khóa trang tới giờ, ví dụ `2026-11-20T00:00:00+07:00`. Xem trước bằng `?preview` |
 | `INTRO` | Các câu mở đầu, ngăn cách bằng `\|` |
 | `LETTER` | Lá thư, xuống dòng viết `\n` |
