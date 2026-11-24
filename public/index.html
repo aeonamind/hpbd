@@ -222,7 +222,7 @@ h1.script{font-size:clamp(38px,11vw,58px);margin:.1em 0;line-height:1.15;
   <div class="big-icon">💌</div>
   <p class="sub" style="margin-top:22px">Có một điều bất ngờ dành cho</p>
   <h1 class="script js-name"></h1>
-  <button class="btn pulse" id="startBtn" style="margin-top:26px">Mở ra nhé ♡</button>
+  <button class="btn pulse" id="startBtn" style="margin-top:26px">Mở quà nhé 🎁</button>
   <p class="tiny">🔊 Bật âm thanh lên để trọn vẹn hơn nha</p>
 </section>
 
@@ -590,7 +590,7 @@ function boot() {
 $('#startBtn').onclick = () => {
   Sound.init(); Sound.startBg();
   $('#musicBtn').classList.add('show');
-  Track.mark('start', '💌 Bấm "Mở ra nhé" — bắt đầu xem');
+  Track.mark('start', '💌 Bấm "Mở quà nhé" — bắt đầu xem');
   go('s-intro');
 };
 $('#musicBtn').onclick = () => { const m = Sound.toggle(); $('#musicBtn').classList.toggle('off', m); if (m) Track.extra.muted = true; };
@@ -735,7 +735,7 @@ async function typeLetter() {
   typing = false;
   Track.mark('letter', letterSkipped ? '📜 Mở thư (chạm để hiện hết luôn, không chờ gõ từng chữ)' : '📜 Đọc thư — xem gõ hết từng chữ');
   $('#caret').classList.add('hidden');
-  const sig = $('#sig'); sig.textContent = '— ' + CONFIG.fromName + ' ♡'; sig.classList.add('show');
+  const sig = $('#sig'); sig.textContent = '— ' + CONFIG.fromName; sig.classList.add('show');
   setTimeout(() => { paper.scrollTo({ top: paper.scrollHeight, behavior: 'smooth' }); }, 200);
   await sleep(900);
   $('#letterNext').classList.add('show');
@@ -780,7 +780,7 @@ function flyOut(dir) {
   idx++;
   layoutDeck();
   if (idx >= cards.length) {
-    $('#wishCount').textContent = '♡';
+    $('#wishCount').textContent = '🎉';
     Track.mark('wishes', `🃏 Lật hết ${cards.length} điều chúc`);
     FX.confetti(90);
     $('#wishesNext').classList.add('show');
