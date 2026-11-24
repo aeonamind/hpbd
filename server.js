@@ -116,16 +116,19 @@ function current() {
 /* ---------- tracking ---------- */
 async function track(msg, req) {
   const { trackTopic, ntfyUrl, config } = current();
-  const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+  const ip = (req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
   console.log(`[track] ${new Date().toISOString()} ${ip} ${msg}`);
   if (!trackTopic) return;
   try {
-    await fetch(`${ntfyUrl}/${encodeURIComponent(trackTopic)}`, {
+    // JSON publish (POST to the server root): unlike HTTP headers, the title may contain
+    // Vietnamese letters and emoji. A "Title" header with them makes fetch throw.
+    const res = await fetch(ntfyUrl, {
       method: 'POST',
-      body: msg,
-      headers: { Title: `🎂 ${config.herName}` },
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topic: trackTopic, title: `🎂 ${config.herName}`, message: msg }),
       signal: AbortSignal.timeout(5000),
     });
+    if (!res.ok) console.error(`[track] ntfy HTTP ${res.status}: ${(await res.text()).slice(0, 200)}`);
   } catch (e) {
     console.error('[track] ntfy error:', e.message);
   }
