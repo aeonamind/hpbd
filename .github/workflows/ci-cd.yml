@@ -62,7 +62,7 @@ jobs:
           NEW_TAG="${{ needs.build-and-push.outputs.tag }}"
           CHART_PATH="infra/hpbd/values.yaml"
 
-          CURRENT_TAG=$(yq eval '.image.tag' "$CHART_PATH")
+          CURRENT_TAG=$(sed -n 's/^  tag: *//p' "$CHART_PATH" | head -1)
           echo "Current tag: $CURRENT_TAG"
           echo "New tag:     $NEW_TAG"
 
@@ -71,7 +71,8 @@ jobs:
             exit 0
           fi
 
-          yq eval ".image.tag = \"$NEW_TAG\"" -i "$CHART_PATH"
+          # sed (not yq) so the hand-written page content in values.yaml keeps its formatting
+          sed -i "s/^  tag: .*/  tag: $NEW_TAG/" "$CHART_PATH"
 
       - name: Commit and push (with retry)
         run: |
@@ -89,7 +90,7 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
-            yq eval ".image.tag = \"$NEW_TAG\"" -i "infra/hpbd/values.yaml"
+            sed -i "s/^  tag: .*/  tag: $NEW_TAG/" "infra/hpbd/values.yaml"
 
             if git diff --quiet; then
               echo "No changes to commit."
